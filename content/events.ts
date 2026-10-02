@@ -76,7 +76,9 @@ export const eventTypes: EventType[] = [
   },
 ];
 
-export type RecentEvent = { title: string; date: string; place?: string; photos: number; source: string };
+export type RecentEvent = { title: string; date: string; place?: string; photos: number; url?: string; source: string };
+
+// Fallback list, used only when the Facebook connection isn't configured or fails (see lib/server/facebook.ts).
 
 export const recentEvents: RecentEvent[] = [
   { title: "7th anniversary celebration", date: "2026-09-27", photos: 260, source: "F21" },

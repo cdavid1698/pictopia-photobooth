@@ -8,6 +8,7 @@ export const site = {
 export const nav = [
   { href: "/packages", label: "Packages" },
   { href: "/pause-time", label: "Pause time" },
+  { href: "/book/status", label: "Booking status" },
   { href: "/faq", label: "FAQ" },
   { href: "/contact", label: "Contact" },
 ];

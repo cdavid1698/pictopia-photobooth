@@ -14,8 +14,8 @@ export function StickyBookBar() {
 
   return (
     <>
-      <div aria-hidden className="h-20 md:hidden" />
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t-2 border-espresso bg-paper px-4 py-3 md:hidden">
+      <div aria-hidden className="h-20 lg:hidden" />
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t-2 border-espresso bg-paper px-4 py-3 lg:hidden">
         <div className="flex items-center gap-3">
           <p className="text-sm leading-tight">
             From <span className="font-display text-lg font-semibold tabular">{formatPeso(fromPrice)}</span>

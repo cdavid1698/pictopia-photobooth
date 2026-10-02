@@ -54,7 +54,7 @@ export function SiteFooter() {
         <div>
           <h2 className="font-display text-lg font-semibold text-booth-yellow">Pages</h2>
           <ul className="mt-3 grid gap-1">
-            {[{ href: "/book", label: "Book" }, { href: "/book/status", label: "Booking status" }, ...nav, { href: "/privacy", label: "Privacy" }, { href: "/terms", label: "Terms" }].map(
+            {[{ href: "/book", label: "Book" }, ...nav, { href: "/privacy", label: "Privacy" }, { href: "/terms", label: "Terms" }].map(
               (item) => (
                 <li key={item.href}>
                   <Link href={item.href} className="inline-flex min-h-11 items-center hover:underline">

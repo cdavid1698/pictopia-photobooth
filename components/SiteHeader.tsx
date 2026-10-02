@@ -27,14 +27,14 @@ export function SiteHeader() {
           <Image src="/images/pictopia-logo.png" alt="" width={518} height={398} priority className="h-14 w-auto" />
         </Link>
 
-        <nav aria-label="Main" className="ml-auto hidden md:block">
+        <nav aria-label="Main" className="ml-auto hidden lg:block">
           <ul className="flex items-center gap-1">
             {nav.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
                   aria-current={pathname === item.href ? "page" : undefined}
-                  className="rounded-lg px-3 py-2 font-semibold hover:bg-butter aria-[current=page]:underline aria-[current=page]:decoration-booth-yellow aria-[current=page]:decoration-4 aria-[current=page]:underline-offset-8"
+                  className="whitespace-nowrap rounded-lg px-3 py-2 font-semibold hover:bg-butter aria-[current=page]:underline aria-[current=page]:decoration-booth-yellow aria-[current=page]:decoration-4 aria-[current=page]:underline-offset-8"
                 >
                   {item.label}
                 </Link>
@@ -45,26 +45,26 @@ export function SiteHeader() {
 
         <a
           href={`tel:${business.phoneE164.value}`}
-          className="ml-auto hidden items-center gap-2 rounded-lg px-2 py-2 font-semibold tabular hover:bg-butter md:ml-0 lg:flex"
+          className="ml-auto hidden items-center gap-2 rounded-lg px-2 py-2 font-semibold tabular hover:bg-butter lg:ml-0 xl:flex"
         >
           <Phone className="size-4" aria-hidden />
           {business.phoneDisplay.value}
         </a>
 
-        <ButtonLink href="/book" className="max-md:hidden">
+        <ButtonLink href="/book" className="whitespace-nowrap max-lg:hidden">
           Check my date
         </ButtonLink>
 
         <a
           href={`tel:${business.phoneE164.value}`}
-          className="ml-auto grid size-12 place-items-center rounded-xl border-2 border-espresso md:hidden"
+          className="ml-auto grid size-12 place-items-center rounded-xl border-2 border-espresso lg:hidden"
           aria-label={`Call ${business.phoneDisplay.value}`}
         >
           <Phone className="size-5" aria-hidden />
         </a>
         <button
           type="button"
-          className="grid size-12 place-items-center rounded-xl border-2 border-espresso md:hidden"
+          className="grid size-12 place-items-center rounded-xl border-2 border-espresso lg:hidden"
           aria-expanded={menuOpen}
           aria-controls="mobile-menu"
           onClick={() => setMenuOpen((o) => !o)}
@@ -75,7 +75,7 @@ export function SiteHeader() {
       </div>
 
       {menuOpen ? (
-        <nav id="mobile-menu" aria-label="Main" className="border-t-2 border-espresso bg-paper px-4 pb-6 pt-2 md:hidden">
+        <nav id="mobile-menu" aria-label="Main" className="border-t-2 border-espresso bg-paper px-4 pb-6 pt-2 lg:hidden">
           <ul>
             {nav.map((item) => (
               <li key={item.href}>

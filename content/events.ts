@@ -9,7 +9,7 @@ export type EventType = {
   id: EventTypeId;
   name: string;
   hint: string;
-  // Default plan: 2 operating hours split around a 1–2 hour pause, all within 4 hours on site.
+  // Default plan: 2 operating hours split around an optional pause of up to 2 hours, all within 4 hours on site.
   plan: Segment[];
 };
 

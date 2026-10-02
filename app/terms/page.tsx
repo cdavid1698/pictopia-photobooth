@@ -13,8 +13,8 @@ export default function TermsPage() {
       </p>
       <h2>Packages</h2>
       <p>
-        Each package includes 2 operating hours of unlimited shots within up to 4 hours on site, with a 1 to 2 hour pause
-        during your program. Extra operating hours are ₱1,000 each.
+        Each package includes 2 operating hours of unlimited shots within up to 4 hours on site, with an optional pause of up
+        to 2 hours during your program. Extra operating hours are ₱1,000 each.
       </p>
       <h2>Travel</h2>
       <p>A travel fee applies depending on the venue location and is agreed before your booking is confirmed.</p>

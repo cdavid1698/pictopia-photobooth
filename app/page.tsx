@@ -62,7 +62,7 @@ export default function HomePage() {
         <SectionHeading
           id="pause-h"
           title="Booth hours that fit your program"
-          intro="We're on site for up to 4 hours and run the booth for 2. We pause for 1 to 2 hours during your program, then start again for the party. Try it with your own timing."
+          intro="We're on site for up to 4 hours and run the booth for 2. We can pause for up to 2 hours during your program, then start again for the party. Try it with your own timing."
         />
         <HoursPlannerDemo />
       </Section>

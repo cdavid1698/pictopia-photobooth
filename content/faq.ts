@@ -3,7 +3,7 @@ export type Faq = { q: string; a: string; source: string; sample?: true };
 export const faqs: Faq[] = [
   {
     q: "What is pause time?",
-    a: "We stay at your venue for up to 4 hours and run the booth for 2 of them. When your program starts — the entrance, the 18 roses, the cake — we pause for 1 to 2 hours so your guests don't miss it, then start again for the party.",
+    a: "We stay at your venue for up to 4 hours and run the booth for 2 of them. When your program starts — the entrance, the 18 roses, the cake — we can pause for up to 2 hours so your guests don't miss it, then start again for the party.",
     source: "A1.6",
   },
   {

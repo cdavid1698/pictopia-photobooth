@@ -207,7 +207,7 @@ export function StepHours({ draft, update }: StepProps) {
   return (
     <div>
       <p className="mb-6 max-w-2xl text-lg text-espresso-soft">
-        We&apos;re on site for up to 4 hours. Place your 2 booth hours around your program, and we&apos;ll pause for 1 to 2 hours
+        We&apos;re on site for up to 4 hours. Place your 2 booth hours around your program, and we can pause for up to 2 hours
         while it happens.
       </p>
       <HoursPlanner

@@ -23,7 +23,7 @@ const optionalText = (max: number) =>
 
 const segment = z.object({
   kind: z.enum(["on", "pause"]),
-  hours: z.number().multipleOf(0.5).min(0.5).max(5),
+  hours: z.number().multipleOf(0.5).min(0).max(5),
   label: z.string().trim().max(40),
 });
 
@@ -63,6 +63,8 @@ export const bookingSchema = z
       first.kind === "on" &&
       pause.kind === "pause" &&
       second.kind === "on" &&
+      first.hours >= 0.5 &&
+      second.hours >= 0.5 &&
       pause.hours >= boothHours.pauseMin &&
       pause.hours <= boothHours.pauseMax &&
       first.hours + second.hours === operating;

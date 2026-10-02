@@ -10,7 +10,7 @@ export function describeBooking(d: BookingDraft) {
   const color = backdrops.colors.find((c) => c.id === d.backdropColor)!;
   const pause = d.plan[1];
   let cursor = d.startTime;
-  const sessions = d.plan.map((s) => {
+  const sessions = d.plan.filter((s) => s.hours > 0).map((s) => {
     const from = cursor;
     cursor += s.hours * 60;
     return `${s.kind === "on" ? "Booth on" : "Paused"} ${formatClock(from)}–${formatClock(cursor)}${s.label ? ` (${s.label})` : ""}`;
@@ -23,7 +23,7 @@ export function describeBooking(d: BookingDraft) {
     display: d.display === "magnetic" ? "Magnetic prints" : "Standee frame",
     backdrop: `${color.name} ${d.backdropFinish} backdrop`,
     hours: `${formatClock(d.startTime)} – ${formatClock(d.startTime + onSiteHours(d.plan) * 60)}`,
-    pause: `${formatHours(pause.hours)} pause${pause.label ? ` for ${pause.label.toLowerCase()}` : ""}`,
+    pause: pause.hours === 0 ? "no pause" : `${formatHours(pause.hours)} pause${pause.label ? ` for ${pause.label.toLowerCase()}` : ""}`,
     sessions,
   };
 }

@@ -66,7 +66,7 @@ export const inclusions = {
 export const boothHours = {
   onSiteHours: 4,
   operatingHours: 2,
-  pauseMin: 1,
+  pauseMin: 0,
   pauseMax: 2,
   extraHourPrice: 1000,
   maxExtraHours: 3,

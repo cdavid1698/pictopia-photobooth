@@ -10,7 +10,7 @@ import { formatClock, formatHours, formatPeso } from "@/lib/format";
 export type PlannerValue = { plan: Segment[]; extraHours: number; startTime: number };
 
 const START_TIMES = Array.from({ length: 27 }, (_, i) => 7 * 60 + i * 30); // 7:00 AM – 8:00 PM
-const PAUSES = [1, 1.5, 2].filter((h) => h >= boothHours.pauseMin && h <= boothHours.pauseMax);
+const PAUSES = [0, 0.5, 1, 1.5, 2].filter((h) => h >= boothHours.pauseMin && h <= boothHours.pauseMax);
 
 function Stepper({
   label,
@@ -65,7 +65,7 @@ function Stepper({
   );
 }
 
-/** The booth-hours planner: two booth sessions around a 1–2 hour pause for the event program. */
+/** The booth-hours planner: two booth sessions around an optional pause (up to 2 hours) for the event program. */
 export function HoursPlanner({
   value,
   onChange,
@@ -104,7 +104,7 @@ export function HoursPlanner({
           style={{ "--track-h": `${total * 84}px` } as CSSProperties}
           aria-label={`Booth plan, ${formatHours(total)} on site`}
         >
-          {timed.map((s, i) => (
+          {timed.filter((s) => s.hours > 0).map((s, i) => (
             <li
               key={i}
               style={{ flexGrow: s.hours, flexBasis: 0 }}
@@ -158,14 +158,14 @@ export function HoursPlanner({
           max={op - STEP}
           step={STEP}
           onChange={(h) => setSegment(0, { hours: h })}
-          hint={`The rest of your ${formatHours(op)} runs after the pause (${formatHours(second.hours)}).`}
+          hint={`The rest of your ${formatHours(op)} runs in the second session (${formatHours(second.hours)}).`}
         />
 
         <fieldset>
           <legend id={pauseId} className="font-semibold">
             Pause length
           </legend>
-          <div className="mt-2 flex gap-2">
+          <div className="mt-2 grid grid-cols-3 gap-2">
             {PAUSES.map((h) => (
               <label key={h} className="flex-1">
                 <input
@@ -176,15 +176,15 @@ export function HoursPlanner({
                   onChange={() => setSegment(1, { hours: h })}
                   className="peer sr-only"
                 />
-                <span className="flex min-h-11 cursor-pointer items-center justify-center rounded-lg border-2 border-espresso px-2 text-center font-semibold peer-checked:bg-espresso peer-checked:text-paper peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ember">
-                  {formatHours(h)}
+                <span className="flex min-h-11 cursor-pointer items-center justify-center whitespace-nowrap rounded-lg border-2 border-espresso px-1 text-center text-sm font-semibold peer-checked:bg-espresso peer-checked:text-paper peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ember">
+                  {h === 0 ? "No pause" : formatHours(h)}
                 </span>
               </label>
             ))}
           </div>
         </fieldset>
 
-        {editableLabels ? (
+        {editableLabels && pause.hours > 0 ? (
           <div>
             <label htmlFor={labelId} className="font-semibold">
               What happens during the pause?

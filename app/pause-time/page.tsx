@@ -5,7 +5,7 @@ import { Section } from "@/components/ui";
 export const metadata: Metadata = {
   title: "How pause time works",
   description:
-    "We stay up to 4 hours and run the booth for 2, pausing 1–2 hours during your program so guests don't miss the important parts.",
+    "We stay up to 4 hours and run the booth for 2, pausing for up to 2 hours during your program so guests don't miss the important parts.",
 };
 
 const reasons = [
@@ -30,8 +30,8 @@ export default function PauseTimePage() {
         <div className="mx-auto max-w-6xl">
           <h1 className="font-display text-4xl font-semibold md:text-6xl">How pause time works</h1>
           <p className="mt-4 max-w-2xl text-lg md:text-xl">
-            We stay at your venue for up to 4 hours and run the booth for 2 of them. During your program we pause for 1 to 2
-            hours, then start again for the party.
+            We stay at your venue for up to 4 hours and run the booth for 2 of them. During your program we can pause for up to 2
+            hours, then start again for the party. No program? We can run straight through.
           </p>
         </div>
       </section>

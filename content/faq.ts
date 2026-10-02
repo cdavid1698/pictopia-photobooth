@@ -47,6 +47,11 @@ export const faqs: Faq[] = [
     source: "A1.16",
   },
   {
+    q: "How do I check my booking?",
+    a: "Go to Booking status (link at the bottom of every page) and enter your reference number, like PIC-AB12CD, plus the mobile number you booked with. You'll see whether it's pending, confirmed or declined, with all your details.",
+    source: "site feature",
+  },
+  {
     q: "How soon will you confirm my booking?",
     a: "We reply within 24 hours by text or Messenger to confirm your date and travel fee.",
     source: "A1.15",

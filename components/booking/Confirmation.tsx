@@ -110,7 +110,17 @@ export function Confirmation({ reference }: { reference: string }) {
           <Phone className="size-5" aria-hidden /> Call {business.phoneDisplay.value}
         </a>
       </div>
-      <p className="mt-8">
+      <p className="mt-8 rounded-xl border-2 border-espresso bg-paper p-4">
+        Save your reference <strong className="tabular">{request.reference}</strong>. You can{" "}
+        <Link
+          href={`/book/status?ref=${request.reference}`}
+          className="font-semibold text-ember underline decoration-2 underline-offset-4"
+        >
+          check your booking status
+        </Link>{" "}
+        any time with it and your mobile number.
+      </p>
+      <p className="mt-6">
         <Link href="/" className="font-semibold text-ember underline decoration-2 underline-offset-4">
           Back to home
         </Link>

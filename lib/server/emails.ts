@@ -1,10 +1,13 @@
 import "server-only";
 import { business } from "@/content/business";
+import { site } from "@/content/site";
 import { buildICS, priceLines, type BookingRequest } from "@/lib/booking";
 import { describeBooking } from "@/lib/describe";
 import { formatPeso } from "@/lib/format";
 import type { EnquiryInput } from "@/lib/schemas";
 import type { Mail } from "@/lib/server/mail";
+
+const statusUrl = (reference: string) => `${site.url}/book/status?ref=${encodeURIComponent(reference)}`;
 
 const esc = (s: string) =>
   s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
@@ -77,9 +80,11 @@ export function customerReceiptEmail(b: BookingRequest): Mail {
     `<p style="margin:0 0 16px">We've received your request for <b>${esc(info.date)}</b>. We'll text or call <b>${esc(b.mobile)}</b> ${esc(business.replyTime.value)} to confirm your date and travel fee.</p>
 <p style="margin:0 0 20px;padding:12px;background:#fff1bf;border-radius:10px">Your date isn't reserved until we confirm it with you by phone. No deposit is needed.</p>
 ${rows(bookingPairs(b))}
+<p style="margin:20px 0 0"><a href="${esc(statusUrl(b.reference))}" style="display:inline-block;background:#ffc72c;color:#2e1b0e;border:2px solid #2e1b0e;border-radius:10px;padding:10px 18px;font-weight:bold;text-decoration:none">Check your booking status</a></p>
+<p style="font-size:13px;color:#5a4232;margin:8px 0 0">Use your reference ${esc(b.reference)} and the mobile number you booked with.</p>
 <p style="margin-top:20px">Questions? Call or text <a href="tel:${esc(business.phoneE164.value)}" style="color:#b4500a">${esc(business.phoneDisplay.value)}</a> or message us on <a href="${esc(business.facebookUrl.value)}" style="color:#b4500a">Facebook</a>.</p>`,
   );
-  const text = `Thanks, ${first}! We got your booking request for ${info.date}. We'll text or call ${b.mobile} ${business.replyTime.value} to confirm your date and travel fee. Your date isn't reserved until we confirm it with you.\n\n${textRows(bookingPairs(b))}\n\nQuestions? Call or text ${business.phoneDisplay.value}.`;
+  const text = `Thanks, ${first}! We got your booking request for ${info.date}. We'll text or call ${b.mobile} ${business.replyTime.value} to confirm your date and travel fee. Your date isn't reserved until we confirm it with you.\n\n${textRows(bookingPairs(b))}\n\nCheck your booking status any time: ${statusUrl(b.reference)} (use your reference and mobile number).\n\nQuestions? Call or text ${business.phoneDisplay.value}.`;
   return {
     to: b.email!,
     subject: `We got your booking request (${b.reference})`,

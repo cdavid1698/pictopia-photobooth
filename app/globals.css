@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-espresso: #2e1b0e;
+  --color-espresso-soft: #5a4232;
+  --color-booth-yellow: #ffc72c;
+  --color-flash-orange: #f07c1b;
+  --color-ember: #b4500a;
+  --color-butter: #fff1bf;
+  --color-paper: #ffffff;
+  --color-line: #e9dcc2;
+
+  --font-display: var(--font-fredoka);
+  --font-sans: var(--font-figtree);
+
+  --shadow-print: 4px 4px 0 0 #2e1b0e;
+  --shadow-print-sm: 3px 3px 0 0 #2e1b0e;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-espresso);
+  font-family: var(--font-figtree), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-ember);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Prices and times line up in columns */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Diagonal hatch used for "pause" blocks in the booth-hours planner */
+.hatch {
+  background-color: #fff;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent 0 7px,
+    rgb(46 27 14 / 0.14) 7px 9px
+  );
+}
+
+/* Hero: the strip prints once on load */
+@keyframes print-out {
+  from {
+    transform: translateY(-78%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.print-strip {
+  transform-box: fill-box;
+  animation: print-out 1100ms cubic-bezier(0.3, 0.7, 0.3, 1) 400ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .print-strip {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
+}

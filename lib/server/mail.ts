@@ -9,7 +9,8 @@ function transport(): Transporter {
     host: "smtp.gmail.com",
     port: 465,
     secure: true,
-    auth: { user: requireEnv("GMAIL_USER"), pass: requireEnv("GMAIL_APP_PASSWORD") },
+    // App Passwords are shown with spaces ("abcd efgh ..."); Gmail wants them without.
+    auth: { user: requireEnv("GMAIL_USER"), pass: requireEnv("GMAIL_APP_PASSWORD").replace(/\s/g, "") },
   });
   return transporter;
 }

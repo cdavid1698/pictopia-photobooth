@@ -1,16 +1,33 @@
 import "server-only";
+import { lookup } from "node:dns/promises";
 import { createTransport, type Transporter } from "nodemailer";
 import { requireEnv } from "@/lib/server/env";
 
-let transporter: Transporter | null = null;
+const SMTP_HOST = "smtp.gmail.com";
 
-function transport(): Transporter {
-  transporter ??= createTransport({
-    host: "smtp.gmail.com",
+let transporter: Promise<Transporter> | null = null;
+
+async function createGmailTransport(): Promise<Transporter> {
+  // Resolve with the operating system's resolver (fast and reliable everywhere) instead of
+  // nodemailer's own DNS queries, which can stall for minutes on some networks.
+  const { address } = await lookup(SMTP_HOST, { family: 4 });
+  return createTransport({
+    host: address,
     port: 465,
     secure: true,
+    tls: { servername: SMTP_HOST },
+    connectionTimeout: 15_000,
+    greetingTimeout: 15_000,
+    socketTimeout: 30_000,
     // App Passwords are shown with spaces ("abcd efgh ..."); Gmail wants them without.
     auth: { user: requireEnv("GMAIL_USER"), pass: requireEnv("GMAIL_APP_PASSWORD").replace(/\s/g, "") },
+  });
+}
+
+function transport(): Promise<Transporter> {
+  transporter ??= createGmailTransport().catch((error: unknown) => {
+    transporter = null;
+    throw error;
   });
   return transporter;
 }
@@ -30,7 +47,7 @@ export type Mail = {
 };
 
 export async function sendMail(mail: Mail): Promise<void> {
-  await transport().sendMail({
+  await (await transport()).sendMail({
     from: { name: "Pictopia Photobooth", address: requireEnv("GMAIL_USER") },
     ...mail,
   });

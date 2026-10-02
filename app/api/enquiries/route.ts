@@ -1,8 +1,21 @@
-import { enquirySchema } from "@/lib/schemas";
+import { after } from "next/server";
+import { enquirySchema, type EnquiryInput } from "@/lib/schemas";
 import { ownerEnquiryEmail } from "@/lib/server/emails";
 import { fieldErrors, json, readJson } from "@/lib/server/http";
 import { ownerInbox, sendMail } from "@/lib/server/mail";
 import { db } from "@/lib/server/supabase";
+
+// Leaves time for the email sent in after().
+export const maxDuration = 60;
+
+async function notify(id: string, e: EnquiryInput) {
+  try {
+    await sendMail({ ...ownerEnquiryEmail(e), to: ownerInbox() });
+    await db().from("partner_enquiries").update({ owner_notified_at: new Date().toISOString() }).eq("id", id);
+  } catch (error) {
+    console.error("Enquiry email failed", id, error);
+  }
+}
 
 export async function POST(request: Request) {
   const parsed = enquirySchema.safeParse(await readJson(request));
@@ -19,13 +32,7 @@ export async function POST(request: Request) {
       .select("id")
       .single();
     if (error) throw error;
-
-    try {
-      await sendMail({ ...ownerEnquiryEmail(e), to: ownerInbox() });
-      await db().from("partner_enquiries").update({ owner_notified_at: new Date().toISOString() }).eq("id", data.id);
-    } catch (mailError) {
-      console.error("Enquiry email failed", data.id, mailError);
-    }
+    after(() => notify(data.id as string, e));
     return json({ ok: true }, 201);
   } catch (error) {
     console.error("Enquiry failed", error);

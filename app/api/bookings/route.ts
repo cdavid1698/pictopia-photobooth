@@ -1,4 +1,5 @@
 import { randomBytes } from "node:crypto";
+import { after } from "next/server";
 import { totalPrice, type BookingRequest } from "@/lib/booking";
 import { bookingSchema } from "@/lib/schemas";
 import { earliestBookableManila, fullDates } from "@/lib/server/dates";
@@ -6,6 +7,9 @@ import { customerReceiptEmail, ownerBookingEmail } from "@/lib/server/emails";
 import { fieldErrors, json, readJson } from "@/lib/server/http";
 import { ownerInbox, sendMail } from "@/lib/server/mail";
 import { db } from "@/lib/server/supabase";
+
+// Leaves time for the emails sent in after().
+export const maxDuration = 60;
 
 const MAX_REQUESTS_PER_MOBILE_PER_DAY = 5;
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -17,6 +21,23 @@ function newReference(): string {
 
 function toClock(minutes: number): string {
   return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
+}
+
+async function notify(saved: BookingRequest) {
+  const [owner, customer] = await Promise.allSettled([
+    sendMail({ ...ownerBookingEmail(saved), to: ownerInbox() }),
+    saved.email ? sendMail(customerReceiptEmail(saved)) : Promise.resolve(null),
+  ]);
+  const now = new Date().toISOString();
+  const notified: Record<string, string> = {};
+  if (owner.status === "fulfilled") notified.owner_notified_at = now;
+  else console.error("Owner email failed", saved.reference, owner.reason);
+  if (saved.email && customer.status === "fulfilled") notified.customer_notified_at = now;
+  else if (customer.status === "rejected") console.error("Customer email failed", saved.reference, customer.reason);
+  if (Object.keys(notified).length) {
+    const { error } = await db().from("bookings").update(notified).eq("reference", saved.reference);
+    if (error) console.error("Could not record notification time", saved.reference, error);
+  }
 }
 
 export async function POST(request: Request) {
@@ -94,19 +115,9 @@ export async function POST(request: Request) {
       total,
     };
 
-    // The booking is saved; email problems are logged but never lose the request.
-    const ownerMail = { ...ownerBookingEmail(saved), to: ownerInbox() };
-    const [owner, customer] = await Promise.allSettled([
-      sendMail(ownerMail),
-      b.email ? sendMail(customerReceiptEmail(saved)) : Promise.resolve(null),
-    ]);
-    const now = new Date().toISOString();
-    const notified: Record<string, string> = {};
-    if (owner.status === "fulfilled") notified.owner_notified_at = now;
-    else console.error("Owner email failed", reference, owner.reason);
-    if (b.email && customer.status === "fulfilled") notified.customer_notified_at = now;
-    else if (customer.status === "rejected") console.error("Customer email failed", reference, customer.reason);
-    if (Object.keys(notified).length) await db().from("bookings").update(notified).eq("reference", reference);
+    // The booking is saved. Emails go out after the response so the customer never waits on Gmail;
+    // failures are logged and leave *_notified_at empty, so nothing is lost.
+    after(() => notify(saved));
 
     return json({ reference, total }, 201);
   } catch (error) {
